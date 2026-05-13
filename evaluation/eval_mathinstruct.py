@@ -1,5 +1,5 @@
 """
-eval_mathinstruct_llama.py
+eval_mathinstruct.py
 ==========================
 Evaluation script for TIGER-Lab/MathInstruct dataset.
 Model   : meta-llama/Llama-3.1-8B-Instruct
