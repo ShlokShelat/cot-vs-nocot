@@ -22,23 +22,23 @@ Reports:
 Usage:
   # Baseline
   python3 evaluate_dfa.py \
-      --model_path /path/to/Qwen2.5-7B-Instruct \
+      --model_path <path/to/model> \
       --data_file  dfa_nocot_test.jsonl \
       --mode       baseline \
       --out        eval_results/dfa_baseline_iid.json
 
   # CoT fine-tuned IID
   python3 evaluate_dfa.py \
-      --model_path /path/to/Qwen2.5-7B-Instruct \
-      --lora_path  lora_output_dfa_cot \
+      --model_path <path/to/model> \
+      --lora_path  <path/to/lora_adapter> \
       --data_file  dfa_cot_test.jsonl \
       --mode       cot \
       --out        eval_results/dfa_cot_iid.json
 
   # No-CoT fine-tuned OOD
   python3 evaluate_dfa.py \
-      --model_path /path/to/Qwen2.5-7B-Instruct \
-      --lora_path  lora_output_dfa_nocot \
+      --model_path <path/to/model> \
+      --lora_path  <path/to/lora_adapter> \
       --data_file  dfa_nocot_ood_test.jsonl \
       --mode       nocot \
       --ood \
@@ -81,7 +81,7 @@ def dfa_accepts(dfa: ParsedDFA, string: str) -> bool:
     return cur in dfa.accept
 
 
-# Tier-aware evaluation lengths (consistent with NFA evaluator)
+# Tier-aware evaluation lengths
 TIER_EVAL_LEN = {1: 6, 2: 7, 3: 8, 4: 9}
 
 
@@ -177,7 +177,7 @@ def extract_dfa_table(text: str) -> str:
     """
     Extract the last markdown table containing State and Role columns.
     For CoT outputs: skips intermediate tables (subset construction etc.)
-      and returns the Step 7 minimised DFA table.
+      and returns the final minimised DFA table.
     For No-CoT outputs: returns the only table present.
     """
     lines = text.split("\n")
@@ -410,8 +410,8 @@ def evaluate(args):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model_path",
-                    default="/path/to/Qwen2.5-7B-Instruct")
+    ap.add_argument("--model_path", required=True,
+                    help="Path to base model.")
     ap.add_argument("--lora_path",  default=None,
                     help="Path to LoRA adapter. Omit for baseline.")
     ap.add_argument("--data_file",  required=True,
