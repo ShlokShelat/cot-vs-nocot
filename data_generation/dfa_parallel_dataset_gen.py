@@ -10,7 +10,6 @@ IID templates : 5 templates that mention Thompson's construction explicitly.
 OOD templates : 8 paraphrased templates that do NOT mention Thompson's.
 
 Answer format : markdown transition table (no epsilon column, -- for dead state).
-Fully consistent with [COMPANION_SCRIPT].
 
 4 difficulty tiers by minimised DFA state count:
   Tier 1 : 2 states      (~15%)
@@ -21,7 +20,7 @@ Fully consistent with [COMPANION_SCRIPT].
 Verification : L(NFA) == L(DFA) == L(minDFA) on all strings up to length 7.
 Deduplication: MD5 hash of (regex_str, sorted_alphabet).
 
-Output files (Qwen ChatML .jsonl):
+Output files (ChatML .jsonl):
   {prefix}_cot_{train,val,test,ood_test,full}.jsonl
   {prefix}_nocot_{train,val,test,ood_test,full}.jsonl
 
@@ -620,8 +619,8 @@ HANDCRAFTED = [
     ("a*ba*",               ["a","b"]),
     ("(aa|b)*",             ["a","b"]),
     ("(ab|ba)*",            ["a","b"]),
-    ("a+b+",                ["a","b"]),   # tier 2: min_dfa=3 states
-    ("(ab)+",               ["a","b"]),   # tier 2: min_dfa=3 states
+    ("a+b+",                ["a","b"]),
+    ("(ab)+",               ["a","b"]),
     ("(a|b)*aa(a|b)*",      ["a","b"]),
     ("(0|1)*00(0|1)*",      ["0","1"]),
     ("(a|b)(a|b)(a|b)",     ["a","b"]),
@@ -676,8 +675,6 @@ class _Parser:
 def parse_regex(s): return _Parser(s).parse()
 
 def _guess_tier(regex_string):
-    # Bump to tier 2 if closure operators present -- they produce more DFA
-    # states than tier 1 (dfa_max=2) allows, causing build failures.
     n=len(regex_string)
     has_closure = any(c in regex_string for c in ('+','*','?'))
     if n<=5 and not has_closure: return 1
@@ -867,4 +864,3 @@ def main():
 
 if __name__=="__main__":
     main()
-
