@@ -1,6 +1,6 @@
 """
-Parallel NFA Dataset Generator v2 — 5-Tier Difficulty
-=======================================================
+Parallel NFA Dataset Generator — 5-Tier Difficulty
+====================================================
 Generates TWO parallel datasets from the same regex instances:
   1. CoT   dataset : question + Thompson NFA steps + final NFA table
   2. NoCoT dataset : question + final NFA table ONLY
@@ -14,10 +14,10 @@ Generates TWO parallel datasets from the same regex instances:
 
 Test set is stratified: equal examples per tier so difficulty is controlled.
 
-Output files (JSONL, Qwen ChatML):
-  nfa_v2_cot_train.jsonl / nfa_v2_cot_val.jsonl / nfa_v2_cot_test.jsonl
-  nfa_v2_nocot_train.jsonl / nfa_v2_nocot_val.jsonl / nfa_v2_nocot_test.jsonl
-  nfa_v2_cot_full.jsonl / nfa_v2_nocot_full.jsonl
+Output files (JSONL, ChatML):
+  {prefix}_cot_train.jsonl / {prefix}_cot_val.jsonl / {prefix}_cot_test.jsonl
+  {prefix}_nocot_train.jsonl / {prefix}_nocot_val.jsonl / {prefix}_nocot_test.jsonl
+  {prefix}_cot_full.jsonl / {prefix}_nocot_full.jsonl
 """
 
 import random
@@ -503,12 +503,6 @@ USER_TEMPLATES = [
     ),
 ]
 
-# OOD question templates — used for the held-out OOD eval split
-# Key differences from USER_TEMPLATES:
-#   - No mention of Thompson's construction
-#   - Different framing (informal, homework, implementation, mathematical)
-#   - No backtick regex formatting
-#   - Varied vocabulary (automaton, state machine, transition function)
 OOD_USER_TEMPLATES = [
     "I need an NFA for the pattern {regex} using symbols {{{alpha}}}. "
     "Please show me the full state transition table with epsilon moves.",
@@ -763,7 +757,7 @@ def main():
     ap = argparse.ArgumentParser(description="Generate 5-tier parallel CoT/No-CoT NFA datasets")
     ap.add_argument("--n",          type=int,   default=25000, help="Target pairs")
     ap.add_argument("--seed",       type=int,   default=42)
-    ap.add_argument("--out_prefix", type=str,   default="nfa_v2")
+    ap.add_argument("--out_prefix", type=str,   default="nfa")
     ap.add_argument("--val_split",  type=float, default=0.05)
     ap.add_argument("--test_split", type=float, default=0.10,
                     help="Larger test split (10%) for more reliable evaluation")
