@@ -1,9 +1,8 @@
 """
 summarise_results.py
 ====================
-Aggregates all evaluation JSON files produced by evaluate_nfa_v2.py,
-evaluate_dfa.py, and eval_qwen_three_benchmarks.py into a clean
-per-tier accuracy summary table printed to stdout.
+Aggregates all evaluation JSON files produced by the evaluation
+scripts into a clean per-tier accuracy summary table printed to stdout.
 
 Usage:
   python3 summarise_results.py --results_dir eval_results/
@@ -103,7 +102,7 @@ def main():
             groups["NFA"].append(path)
         elif "dfa" in name:
             groups["DFA"].append(path)
-        elif any(k in name for k in ("gsm","math","mathinstruct")):
+        elif any(k in name for k in ("gsm", "math", "mathinstruct")):
             groups["MATH"].append(path)
         else:
             groups["OTHER"].append(path)
