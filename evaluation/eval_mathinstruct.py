@@ -2,7 +2,6 @@
 eval_mathinstruct.py
 ==========================
 Evaluation script for TIGER-Lab/MathInstruct dataset.
-Model   : meta-llama/Llama-3.1-8B-Instruct
 Supports baseline (no LoRA) and fine-tuned (with LoRA) evaluation.
 
 Split strategy (fixed seed=42, MUST match finetune scripts exactly):
@@ -14,27 +13,27 @@ Reports overall accuracy and per-source / per-type (CoT vs PoT) breakdowns.
 
 Usage:
   # Baseline (no LoRA)
-  python3 eval_mathinstruct_llama.py \
-      --model_path [FILE_PATH]/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659 \
-      --mode       baseline_llama \
+  python3 eval_mathinstruct.py \
+      --model_path <path/to/model> \
+      --mode       baseline \
       --n_samples  5000 \
-      --out        eval_results/mathinstruct_llama_baseline.json
+      --out        eval_results/mathinstruct_baseline.json
 
   # CoT fine-tuned
-  python3 eval_mathinstruct_llama.py \
-      --model_path [FILE_PATH]/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659 \
-      --lora_path  lora_output_mathinstruct_cot_llama \
-      --mode       mathinstruct_cot_llama \
+  python3 eval_mathinstruct.py \
+      --model_path <path/to/model> \
+      --lora_path  <path/to/lora_adapter> \
+      --mode       mathinstruct_cot \
       --n_samples  5000 \
-      --out        eval_results/mathinstruct_llama_cot.json
+      --out        eval_results/mathinstruct_cot.json
 
   # No-CoT fine-tuned
-  python3 eval_mathinstruct_llama.py \
-      --model_path [FILE_PATH]/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659 \
-      --lora_path  lora_output_mathinstruct_nocot_llama \
-      --mode       mathinstruct_nocot_llama \
+  python3 eval_mathinstruct.py \
+      --model_path <path/to/model> \
+      --lora_path  <path/to/lora_adapter> \
+      --mode       mathinstruct_nocot \
       --n_samples  5000 \
-      --out        eval_results/mathinstruct_llama_nocot.json
+      --out        eval_results/mathinstruct_nocot.json
 """
 
 import re
@@ -52,7 +51,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from tqdm import tqdm
 
 # Fixed constants — must match finetune scripts exactly
-MATHINSTRUCT_PATH = "[FILE_PATH]/datasets/MathInstruct/train"
+MATHINSTRUCT_PATH = os.environ.get("MATHINSTRUCT_DATA_PATH", "data/MathInstruct/train")
 _TEST_HOLD_OUT    = 5000   # first N examples after shuffle(seed=42) = test set
 
 
@@ -427,7 +426,6 @@ def evaluate(args):
     summary = {
         "mode":            args.mode,
         "dataset":         "TIGER-Lab/MathInstruct",
-        "model":           "meta-llama/Llama-3.1-8B-Instruct",
         "test_split":      f"held-out indices 0-{_TEST_HOLD_OUT-1} after shuffle seed={args.seed}",
         "model_path":      args.model_path,
         "lora_path":       args.lora_path,
@@ -442,7 +440,6 @@ def evaluate(args):
 
     print(f"\n{'=' * 65}")
     print(f"  Dataset  : TIGER-Lab/MathInstruct")
-    print(f"  Model    : meta-llama/Llama-3.1-8B-Instruct")
     print(f"  Test set : held-out indices 0-{_TEST_HOLD_OUT-1} (seed={args.seed}, no leakage)")
     print(f"  Mode     : {args.mode}")
     print(f"  Accuracy : {accuracy:.2f}%  ({correct}/{len(examples)})")
@@ -473,17 +470,17 @@ def evaluate(args):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model_path",
-                    default="[FILE_PATH]/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659")
+    ap.add_argument("--model_path", required=True,
+                    help="Path to base model.")
     ap.add_argument("--lora_path",  default=None,
                     help="Path to LoRA adapter directory. Omit for baseline.")
-    ap.add_argument("--mode",       default="baseline_llama",
-                    help="Label for results JSON: baseline_llama | mathinstruct_cot_llama | mathinstruct_nocot_llama")
+    ap.add_argument("--mode",       default="baseline",
+                    help="Label for results JSON: baseline | mathinstruct_cot | mathinstruct_nocot")
     ap.add_argument("--n_samples",  type=int, default=None,
                     help="Number of test examples to evaluate. None = all 5000.")
     ap.add_argument("--seed",       type=int, default=42,
                     help="Must match the seed used in fine-tuning scripts (default: 42).")
-    ap.add_argument("--out",        default="eval_results/mathinstruct_llama_results.json")
+    ap.add_argument("--out",        default="eval_results/mathinstruct_results.json")
     args = ap.parse_args()
     evaluate(args)
 
