@@ -1,18 +1,18 @@
 """
-eval_llama_three_benchmarks.py
-==============================
+eval_gsm8k.py
+========================
 Unified evaluation script for MATH-500 and GSM8K.
 Supports baseline (no LoRA) and fine-tuned (with LoRA) evaluation.
 
-Called by submit_gsm8k_llama.sh like:
-  python3 eval_llama_three_benchmarks.py \
-      --model_path [FILE_PATH]/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659 \
-      --lora_path  lora_output_gsm8k_cot_llama8b \   # omit for baseline
+Usage:
+  python3 eval_three_benchmarks.py \
+      --model_path <path/to/model> \
+      --lora_path  <path/to/lora_adapter> \   # omit for baseline
       --dataset    gsm8k \
       --split      test \
       --mode       gsm8k_cot \
       --n_samples  200 \
-      --out        eval_results/gsm8k_cot_llama8b.json
+      --out        eval_results/gsm8k_cot.json
 """
 
 import re
@@ -248,8 +248,8 @@ def evaluate(args):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model_path",
-                    default="[FILE_PATH]/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659")
+    ap.add_argument("--model_path", required=True,
+                    help="Path to base model.")
     ap.add_argument("--lora_path",   default=None,
                     help="Path to LoRA adapter. Omit for baseline.")
     ap.add_argument("--dataset",     required=True, choices=["math", "gsm8k"])
