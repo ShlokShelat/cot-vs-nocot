@@ -12,7 +12,8 @@ To regenerate from scratch see `../data_generation/`.
 
 ## DFA Dataset
 - **Task**: Convert a regular expression to a minimised DFA
-- **Answer**: Markdown transition table with State / Role / symbol columns (no epsilon, -- for dead state)
+- **Answer**: Markdown transition table with State / Role / symbol columns
+  (no epsilon column; `--` for dead/trap state)
 - **4 tiers** by minimised DFA state count: T1 (2), T2 (2-4), T3 (3-6), T4 (4-18)
 - **Splits**: train / val / test (IID) / ood_test
 - **Files**: `dfa_cot_*.jsonl` and `dfa_nocot_*.jsonl`
@@ -29,12 +30,10 @@ Each `.jsonl` line:
     {"role": "assistant", "content": "## Step 1: ..."}
   ],
   "metadata": {
-    "regex":          "(a|b)*abb",
-    "alphabet":       ["a", "b"],
-    "tier":           2,
-    "nfa_states":     10,
-    "min_dfa_states": 4,
-    "hash":           "349dfd84"
+    "regex":    "(a|b)*abb",
+    "alphabet": ["a", "b"],
+    "tier":     2,
+    "hash":     "349dfd84"
   }
 }
 ```
