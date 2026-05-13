@@ -1,32 +1,32 @@
 """
-evaluate_nfa_v2.py
+evaluate_nfa.py
 ===================
-Evaluates base or LoRA fine-tuned model on 5-tier NFA v2 dataset.
+Evaluates base or LoRA fine-tuned model on 5-tier NFA dataset.
 
 Correctness = LANGUAGE EQUIVALENCE across all strings up to length 6.
 Reports overall accuracy AND per-tier accuracy breakdown.
 
 Usage:
   # Baseline:
-  python3 evaluate_nfa_v2.py \
-      --model_path /path/to/Qwen2.5-7B-Instruct \
-      --data_file  nfa_v2_nocot_test.jsonl \
+  python3 evaluate_nfa.py \
+      --model_path <path/to/model> \
+      --data_file  nfa_nocot_test.jsonl \
       --mode       baseline \
       --out        eval_results/results_baseline.json
 
   # CoT fine-tuned:
-  python3 evaluate_nfa_v2.py \
-      --model_path /path/to/Qwen2.5-7B-Instruct \
-      --lora_path  lora_output_nfa_v2_cot \
-      --data_file  nfa_v2_cot_test.jsonl \
+  python3 evaluate_nfa.py \
+      --model_path <path/to/model> \
+      --lora_path  <path/to/lora_adapter> \
+      --data_file  nfa_cot_test.jsonl \
       --mode       cot \
       --out        eval_results/results_cot.json
 
   # No-CoT fine-tuned:
-  python3 evaluate_nfa_v2.py \
-      --model_path /path/to/Qwen2.5-7B-Instruct \
-      --lora_path  lora_output_nfa_v2_nocot \
-      --data_file  nfa_v2_nocot_test.jsonl \
+  python3 evaluate_nfa.py \
+      --model_path <path/to/model> \
+      --lora_path  <path/to/lora_adapter> \
+      --data_file  nfa_nocot_test.jsonl \
       --mode       nocot \
       --out        eval_results/results_nocot.json
 """
@@ -428,18 +428,20 @@ def evaluate(args):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model_path",     default="/path/to/Qwen2.5-7B-Instruct")
-    ap.add_argument("--lora_path",      default=None)
-    ap.add_argument("--data_file",      required=True)
-    ap.add_argument("--mode",           default="baseline",
+    ap.add_argument("--model_path", required=True,
+                    help="Path to base model.")
+    ap.add_argument("--lora_path",  default=None,
+                    help="Path to LoRA adapter. Omit for baseline.")
+    ap.add_argument("--data_file",  required=True)
+    ap.add_argument("--mode",       default="baseline",
                     help="baseline | cot | nocot")
-    ap.add_argument("--n_samples",      type=int, default=None,
+    ap.add_argument("--n_samples",  type=int, default=None,
                     help="Stratified subsample. None = full test set.")
-    ap.add_argument("--eval_len",       type=int, default=6,
+    ap.add_argument("--eval_len",   type=int, default=6,
                     help="Baseline max string length. Overridden per-tier by TIER_EVAL_LEN.")
-    ap.add_argument("--ood",            action="store_true",
+    ap.add_argument("--ood",        action="store_true",
                     help="Mark this run as OOD evaluation (stored in summary).")
-    ap.add_argument("--out",            default="eval_results/results.json")
+    ap.add_argument("--out",        default="eval_results/results.json")
     args = ap.parse_args()
     evaluate(args)
 
