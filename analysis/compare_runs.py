@@ -3,14 +3,14 @@ compare_runs.py
 ===============
 Plots CoT vs No-CoT training and evaluation loss curves from the
 training_metrics.csv files produced by the MetricsLogger callback
-in every fine-tuning script.
+during fine-tuning.
 
 Usage:
   python3 compare_runs.py \
-      --cot_dir   lora_output_nfa_v2_cot \
-      --nocot_dir lora_output_nfa_v2_nocot \
-      --title     "NFA Dataset ([MODEL]-7B)" \
-      --out       figures/nfa_loss_curves.png
+      --cot_dir   lora_output_cot \
+      --nocot_dir lora_output_nocot \
+      --title     "Dataset A (7B)" \
+      --out       figures/loss_curves.png
 """
 
 import argparse, os, csv
