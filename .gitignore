@@ -1,0 +1,36 @@
+# Model checkpoints (host on HuggingFace Hub)
+lora_output_*/
+checkpoints/
+
+# Datasets (host on HuggingFace Hub)
+*.jsonl
+
+# Logs and evaluation outputs
+logs/
+*.log
+*.out
+*.err
+eval_results/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.pdf
+
+# OS
+.DS_Store
+Thumbs.db
