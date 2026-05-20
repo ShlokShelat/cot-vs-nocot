@@ -4,25 +4,25 @@
 
 ```bash
 # Baseline (zero-shot)
-python3 evaluate_nfa_v2.py \
+python3 evaluate_nfa.py \
     --model_path /path/to/model \
-    --data_file  nfa_v2_nocot_test.jsonl \
+    --data_file  nfa_nocot_test.jsonl \
     --mode       baseline \
     --out        eval_results/nfa_baseline_iid.json
 
 # CoT fine-tuned -- IID
-python3 evaluate_nfa_v2.py \
+python3 evaluate_nfa.py \
     --model_path /path/to/model \
-    --lora_path  lora_output_nfa_v2_cot \
-    --data_file  nfa_v2_cot_test.jsonl \
+    --lora_path  lora_output_nfa_cot \
+    --data_file  nfa_cot_test.jsonl \
     --mode       cot \
     --out        eval_results/nfa_cot_iid.json
 
 # No-CoT fine-tuned -- OOD
-python3 evaluate_nfa_v2.py \
+python3 evaluate_nfa.py \
     --model_path /path/to/model \
-    --lora_path  lora_output_nfa_v2_nocot \
-    --data_file  nfa_v2_nocot_ood_test.jsonl \
+    --lora_path  lora_output_nfa_nocot \
+    --data_file  nfa_nocot_ood_test.jsonl \
     --mode       nocot --ood \
     --out        eval_results/nfa_nocot_ood.json
 ```
