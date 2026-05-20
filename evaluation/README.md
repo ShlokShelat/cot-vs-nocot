@@ -82,11 +82,12 @@ python3 eval_mathinstruct.py \
 
 ## Correctness Metric
 
-NFA and DFA predictions are evaluated via **language equivalence**:
-both the ground-truth and predicted automata are simulated on all
-strings up to a tier-dependent maximum length. A prediction is correct
-if and only if the two automata agree on every string.
-This metric is robust to state relabelling.
+NFA and DFA predictions are evaluated via **structural equivalence**:
+both the ground-truth and predicted automata are minimised using
+Hopcroft's algorithm and compared as canonical forms up to state
+relabelling. A prediction is correct if and only if the two minimised
+automata are isomorphic. This metric is exact over the full infinite
+language with no string-length bounds.
 
 | Tier | Dataset | Max string length |
 |------|---------|-------------------|
