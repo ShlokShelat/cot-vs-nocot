@@ -40,7 +40,7 @@ python3 math/finetune_mathinstruct_nocot.py
 | LR scheduler | cosine |
 | Warmup steps | 50 (100 for MathInstruct) |
 | Epochs | 2 |
-| Batch size | 8 (1 per device x 8 grad accum) |
+| Batch size | 8 (1 per device × 8 grad accum) |
 | Max seq length | 8192 (NFA/DFA), 4096 (math) |
 | Precision | bfloat16 |
 | Hardware | NVIDIA H100 NVL |
